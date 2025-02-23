@@ -22,7 +22,7 @@ import RootLayout from '@/layouts/RootLayout';
  * Types
  */
 
-import type { RouteObject } from 'react-router';
+// import type { RouteObject } from 'react-router';
 
 const rootRouteChildren = [
   {
