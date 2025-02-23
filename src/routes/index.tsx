@@ -17,8 +17,8 @@ import LoginPage from '@/pages/LoginPage';
 import AuthSyncPage from '@/pages/AuthSyncPage';
 import InboxPage from '@/pages/InboxPage';
 import TodayTaskPage from '@/pages/TodayTaskPage';
-import UpcomingTaskPage from '@/components/UpcomingTaskPage';
-
+import UpcomingTaskPage from '@/pages/UpcomingTaskPage';
+import CompletedTaskPage from '@/pages/CompletedTaskPage';
 /**
  * Layouts
  */
@@ -41,6 +41,8 @@ import appAction from '@/routes/actions/appAction';
 import inboxTaskLoader from '@/routes/loaders/inboxLoader';
 import todayTaskLoader from '@/routes/loaders/todayTaskLoader';
 import upcomingTaskLoader from '@/routes/loaders/upcomingTaskLoader';
+import completedTaskLoader from '@/routes/loaders/completedTaskLoader';
+
 /**
  * Types
  */
@@ -80,6 +82,11 @@ const appRouteChildren: RouteObject[] = [
     path: 'upcoming',
     element: <UpcomingTaskPage />,
     loader: upcomingTaskLoader,
+  },
+  {
+    path: 'completed',
+    element: <CompletedTaskPage />,
+    loader: completedTaskLoader,
   },
 ];
 

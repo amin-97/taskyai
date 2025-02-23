@@ -39,6 +39,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import TaskFormDialog from '@/components/TaskFormDialog';
+import ProjectFormDialog from '@/components/ProjectFormDialog';
 
 /**
  * Hooks
@@ -121,11 +122,13 @@ const AppSidebar = () => {
             </SidebarGroupLabel>
 
             <Tooltip>
-              <TooltipTrigger asChild>
-                <SidebarGroupAction aria-label='Add project'>
-                  <Plus />
-                </SidebarGroupAction>
-              </TooltipTrigger>
+              <ProjectFormDialog method='POST'>
+                <TooltipTrigger asChild>
+                  <SidebarGroupAction aria-label='Add project'>
+                    <Plus />
+                  </SidebarGroupAction>
+                </TooltipTrigger>
+              </ProjectFormDialog>
 
               <TooltipContent side='right'>Add project</TooltipContent>
             </Tooltip>
