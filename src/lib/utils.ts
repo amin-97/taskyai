@@ -110,3 +110,14 @@ export function getUserId(): string {
 
   return clerkUserId;
 }
+
+/**
+ * Truncates a string to a specified length and appends and ellipsis
+ */
+export function truncateString(str: string, maxLength: number): string {
+  if (str.length > maxLength) {
+    return `${str.slice(0, maxLength - 1)} ... `;
+  }
+
+  return str;
+}
