@@ -34,6 +34,7 @@ import RootErrorBoundary from '@/pages/RootErrorBoundary';
  * Actions
  */
 import appAction from '@/routes/actions/appAction';
+import projectAction from '@/routes/actions/projectAction';
 
 /**
  * Loaders
@@ -87,6 +88,10 @@ const appRouteChildren: RouteObject[] = [
     path: 'completed',
     element: <CompletedTaskPage />,
     loader: completedTaskLoader,
+  },
+  {
+    path: 'projects',
+    action: projectAction,
   },
 ];
 
