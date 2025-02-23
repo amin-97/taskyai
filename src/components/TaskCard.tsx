@@ -8,7 +8,7 @@
  * Node modules
  */
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useFetcher } from 'react-router';
 
 /**
@@ -27,6 +27,11 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import TaskForm from '@/components/TaskForm';
+
+/**
+ * Hooks
+ */
+import { toast } from 'sonner';
 
 /**
  * Assets
@@ -71,6 +76,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
     },
     fetcherTask,
   );
+
+  const handleTaskComplete = useCallback(
+    async (completed: boolean) => {
+      return await fetcher.submit(JSON.stringify({ id: task.id, completed }), {
+        action: '/app',
+        method: 'PUT',
+        encType: 'application/json',
+      });
+    },
+    [task.id, task.completed],
+  );
+
   return (
     <>
       {!taskFormShow && (
@@ -86,6 +103,16 @@ const TaskCard: React.FC<TaskCardProps> = ({
             aria-checked={task.completed}
             aria-label={`Mark task as ${task.completed ? 'incomplete' : 'complete'}`}
             aria-describedby='task-content'
+            onClick={async () => {
+              await handleTaskComplete(!task.completed);
+
+              toast('1 task completed', {
+                action: {
+                  label: 'Undo',
+                  onClick: handleTaskComplete.bind(null, false),
+                },
+              });
+            }}
           >
             <Check
               strokeWidth={4}
@@ -125,10 +152,10 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
               <div className='grid grid-cols-[minmax(0,180px), max-content] items-center gap-1 text-xs text-muted-foreground ms-auto'>
                 <div className='truncate text-right'>
-                  {project?.name || 'Inbox'}
+                  {task.project?.name || 'Inbox'}
                 </div>
 
-                {project ? (
+                {task.project ? (
                   <Hash size={14} />
                 ) : (
                   <Inbox
@@ -141,7 +168,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </Card>
 
           <div className='absolute top-1.5 right-0 bg-background ps-1 shadow-[-10px_0_5px_hsl(var(--background))] flex items-center gap-1 opacity-0 group-hover/card:opacity-100 focus-within:opacity-100 max-md:opacity-100'>
-            {!completed && (
+            {!task.completed && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -181,14 +208,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
         <TaskForm
           className='my-1/'
           defaultFormData={{
-            id,
-            content,
-            due_date: dueDate,
-            projectId: project && project?.$id,
+            ...task,
+            project: project && project?.$id,
           }}
           mode='edit'
           onCancel={() => setTaskFormShow(false)}
           onSubmit={(formData) => {
+            console.log(formData);
             fetcher.submit(JSON.stringify(formData), {
               action: '/app',
               method: 'PUT',

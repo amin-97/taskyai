@@ -27,7 +27,7 @@ const getTasks = async () => {
   try {
     return await databases.listDocuments(APPWRITE_DATABASE_ID, 'tasks', [
       Query.equal('completed', false),
-      Query.isNull('projectId'),
+      Query.isNull('project'),
       Query.equal('userId', getUserId()),
     ]);
   } catch (err) {
