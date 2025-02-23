@@ -17,6 +17,8 @@ import LoginPage from '@/pages/LoginPage';
 import AuthSyncPage from '@/pages/AuthSyncPage';
 import InboxPage from '@/pages/InboxPage';
 import TodayTaskPage from '@/pages/TodayTaskPage';
+import UpcomingTaskPage from '@/components/UpcomingTaskPage';
+
 /**
  * Layouts
  */
@@ -38,11 +40,12 @@ import appAction from '@/routes/actions/appAction';
  */
 import inboxTaskLoader from '@/routes/loaders/inboxLoader';
 import todayTaskLoader from '@/routes/loaders/todayTaskLoader';
-
+import upcomingTaskLoader from '@/routes/loaders/upcomingTaskLoader';
 /**
  * Types
  */
 import type { RouteObject } from 'react-router';
+
 const rootRouteChildren: RouteObject[] = [
   {
     index: true,
@@ -72,6 +75,11 @@ const appRouteChildren: RouteObject[] = [
     path: 'today',
     element: <TodayTaskPage />,
     loader: todayTaskLoader,
+  },
+  {
+    path: 'upcoming',
+    element: <UpcomingTaskPage />,
+    loader: upcomingTaskLoader,
   },
 ];
 
