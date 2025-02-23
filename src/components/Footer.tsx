@@ -24,7 +24,7 @@ const Footer = () => {
           {SOCIAL_LINKS.map(({ href, label }, index) => (
             <li
               key={index}
-              className=''
+              className='flex items-center'
             >
               <a
                 href={href}
