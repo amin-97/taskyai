@@ -7,7 +7,8 @@
 /**
  * Node modules
  */
-import { Outlet } from 'react-router';
+import { Outlet, useNavigation } from 'react-router';
+import { cn } from '@/lib/utils';
 
 /**
  * Components
@@ -18,6 +19,10 @@ import AppSidebar from '@/components/AppSidebar';
 import { Toaster } from '@/components/ui/sonner';
 
 const AppLayout = () => {
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === 'loading' && !navigation.formData;
+
   return (
     <>
       <SidebarProvider>
@@ -26,7 +31,12 @@ const AppLayout = () => {
           disableHoverableContent
         >
           <AppSidebar />
-          <main className='flex-1'>
+          <main
+            className={cn(
+              'flex-1',
+              isLoading && 'opacity-50 pointer-events-none',
+            )}
+          >
             <Outlet />
           </main>
         </TooltipProvider>

@@ -1,7 +1,7 @@
 /**
  * @copyright 2025 datacharge
  * @license Apache-2.0
- * @description Inbox page for the app
+ * @description Today task page component for the app
  */
 
 /**
@@ -9,6 +9,7 @@
  */
 import { useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
+import { startOfToday } from 'date-fns';
 
 /**
  * Components
@@ -23,11 +24,16 @@ import TaskCard from '@/components/TaskCard';
 import TaskCardSkeleton from '@/components/TaskCardSkeleton';
 
 /**
+ * Assets
+ */
+import { CheckCircle2 } from 'lucide-react';
+
+/**
  * Types
  */
 import type { Models } from 'appwrite';
 
-const InboxPage = () => {
+const TodayTaskPage = () => {
   const fetcher = useFetcher();
   const { tasks } = useLoaderData<{
     tasks: Models.DocumentList<Models.Document>;
@@ -37,12 +43,21 @@ const InboxPage = () => {
 
   return (
     <>
-      <Head title='Inbox - Tasky AI' />
-      <TopAppBar title='Inbox' />
+      <Head title='Today - Tasky AI' />
+      <TopAppBar
+        title='Today'
+        taskCount={tasks.total}
+      />
 
       <Page>
         <PageHeader>
-          <PageTitle>Inbox</PageTitle>
+          <PageTitle>Today</PageTitle>
+
+          {tasks.total > 0 && (
+            <div className='flex items-center gap-1.5 text-sm text-muted-foreground'>
+              <CheckCircle2 size={16} /> {tasks.total} tasks
+            </div>
+          )}
         </PageHeader>
 
         <PageList>
@@ -65,12 +80,17 @@ const InboxPage = () => {
             <TaskCreateButton onClick={() => setTaskFormShow(true)} />
           )}
 
-          {!tasks.total && !taskFormShow && <TaskEmptyState type='inbox' />}
+          {!tasks.total && !taskFormShow && <TaskEmptyState />}
 
           {taskFormShow && (
             <TaskForm
               className='mt-1'
               mode='create'
+              defaultFormData={{
+                content: '',
+                due_date: startOfToday(),
+                project: null,
+              }}
               onCancel={() => setTaskFormShow(false)}
               onSubmit={(formData) => {
                 fetcher.submit(JSON.stringify(formData), {
@@ -87,4 +107,4 @@ const InboxPage = () => {
   );
 };
 
-export default InboxPage;
+export default TodayTaskPage;
