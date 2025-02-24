@@ -11,10 +11,20 @@ import { useState } from 'react';
 import { useFetcher } from 'react-router';
 
 /**
+ * Custom modules
+ */
+import { truncateString } from '@/lib/utils';
+
+/**
  * Components
  */
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import ProjectForm from '@/components/ProjectForm';
+
+/**
+ * Hooks
+ */
+import { toast } from 'sonner';
 
 /**
  * Types
@@ -51,11 +61,38 @@ const ProjectFormDialog: React.FC<ProjectFormDialogProps> = ({
           onSubmit={async (data) => {
             setOpen(false);
 
+            const toastId = toast.loading(
+              `${method === 'POST' ? 'Creating' : 'Updating'} project`,
+              {
+                duration: Infinity,
+              },
+            );
+
+            // Later, update or dismiss the toast (example)
+            toast.success('Project created successfully', {
+              id: toastId, // Replaces the existing toast with this ID
+            });
+
+            // Submit the form data
             await fetcher.submit(JSON.stringify(data), {
               action: '/app/projects',
               method,
               encType: 'application/json',
             });
+
+            // Update the toast with success message
+            toast.success(
+              `Project ${method === 'POST' ? 'created' : 'updated'}.`,
+              {
+                id: toastId, // Replaces the loading toast
+                description: `The project ${truncateString(data.name, 32)} ${
+                  data.ai_task_gen ? 'and its tasks' : ''
+                } have been successfully ${
+                  method === 'POST' ? 'created' : 'updated'
+                }.`,
+                duration: 5000,
+              },
+            );
           }}
         />
       </DialogContent>
