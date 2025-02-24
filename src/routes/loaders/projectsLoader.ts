@@ -24,9 +24,10 @@ const APPWRITE_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
  */
 import type { LoaderFunction } from 'react-router';
 
-const getProjects = async () => {
+const getProjects = async (query: string) => {
   try {
     return await databases.listDocuments(APPWRITE_DATABASE_ID, 'projects', [
+      Query.contains('name', query),
       Query.select(['$id', 'name', 'color_name', 'color_hex', '$createdAt']),
       Query.equal('userId', getUserId()),
       Query.orderDesc('$createdAt'),
@@ -37,9 +38,13 @@ const getProjects = async () => {
   }
 };
 
-const projectsLoader: LoaderFunction = async () => {
-  const projects = await getProjects();
-  console.log(projects);
+const projectsLoader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('q') || '';
+  console.log(url);
+
+  const projects = await getProjects(query);
+
   return { projects };
 };
 
