@@ -1,7 +1,7 @@
 /**
  * @copyright 2025 datacharge
  * @license Apache-2.0
- * @description Today task laoder component for the app
+ * @description Today task loader component for the app
  */
 
 /**
