@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import TopAppBar from '@/components/TopAppBar';
 import ProjectFormDialog from '@/components/ProjectFormDialog';
 import { Page, PageHeader, PageTitle, PageList } from '@/components/Page';
+import ProjectCard from '@/components/ProjectCard';
 
 /**
  * Assets
@@ -72,7 +73,10 @@ const ProjectsPage = () => {
 
           <div className=''>
             {projects.documents.map((project) => (
-                
+              <ProjectCard
+                key={project.$id}
+                project={project}
+              />
             ))}
           </div>
         </PageList>
