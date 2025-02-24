@@ -46,7 +46,7 @@ import todayTaskLoader from '@/routes/loaders/todayTaskLoader';
 import upcomingTaskLoader from '@/routes/loaders/upcomingTaskLoader';
 import completedTaskLoader from '@/routes/loaders/completedTaskLoader';
 import projectsLoader from '@/routes/loaders/projectsLoader';
-import projectDetailLoader from '@/routes/loaders/projectDetailLoader';
+import projectDetailLoader from './loaders/projectDetailLoader';
 
 /**
  * Types
