@@ -25,7 +25,7 @@ const APPWRITE_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
  * Types
  */
 import type { ActionFunction } from 'react-router';
-import type { ProjectForm } from '@/types';
+import type { Project, ProjectForm } from '@/types';
 import type { Models } from 'appwrite';
 
 type aiGenTask = {
@@ -95,6 +95,43 @@ const createProject = async (data: ProjectForm) => {
   return redirect(`/app/projects/${project?.$id}`);
 };
 
+const updateProject = async (data: Project) => {
+  const documentId = data.id;
+
+  if (!documentId) throw new Error('Project id not found.');
+
+  try {
+    return await databases.updateDocument(
+      APPWRITE_DATABASE_ID,
+      'projects',
+      documentId,
+      {
+        name: data.name,
+        color_name: data.color_name,
+        color_hex: data.color_hex,
+      },
+    );
+  } catch (err) {
+    console.log('Error updating project', err);
+  }
+};
+
+const deleteProject = async (data: Project) => {
+  const documentId = data.id;
+
+  if (!documentId) throw new Error('No project found with this id.');
+
+  try {
+    await databases.deleteDocument(
+      APPWRITE_DATABASE_ID,
+      'projects',
+      documentId,
+    );
+  } catch (err) {
+    console.log('Error deleting project', err);
+  }
+};
+
 const projectAction: ActionFunction = async ({ request }) => {
   const method = request.method;
   const data = (await request.json()) as ProjectForm;
@@ -103,7 +140,15 @@ const projectAction: ActionFunction = async ({ request }) => {
     return await createProject(data);
   }
 
-  return null;
+  if (method === 'PUT') {
+    return await updateProject(data);
+  }
+
+  if (method === 'DELETE') {
+    return await deleteProject(data);
+  }
+
+  throw new Error('Invalid method');
 };
 
 export default projectAction;
