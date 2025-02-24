@@ -7,7 +7,7 @@
 /**
  * Node modules
  */
-import { Outlet, useNavigation } from 'react-router';
+import { Outlet, useNavigation, useLoaderData } from 'react-router';
 import { cn } from '@/lib/utils';
 
 /**
@@ -17,14 +17,21 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import AppSidebar from '@/components/AppSidebar';
 import { Toaster } from '@/components/ui/sonner';
+import { ProjectProvider } from '@/context/ProjectContext';
+
+/**
+ * Types
+ */
+import { AppLoaderData } from '@/routes/loaders/appLoader';
 
 const AppLayout = () => {
   const navigation = useNavigation();
+  const { projects } = useLoaderData<AppLoaderData>();
 
   const isLoading = navigation.state === 'loading' && !navigation.formData;
 
   return (
-    <>
+    <ProjectProvider projects={projects}>
       <SidebarProvider>
         <TooltipProvider
           delayDuration={500}
@@ -43,7 +50,7 @@ const AppLayout = () => {
       </SidebarProvider>
 
       <Toaster />
-    </>
+    </ProjectProvider>
   );
 };
 

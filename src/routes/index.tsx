@@ -31,6 +31,7 @@ import AppLayout from '@/layouts/AppLayout';
  * Error boundaries
  */
 import RootErrorBoundary from '@/pages/RootErrorBoundary';
+import ProjectErrorBoundary from '@/pages/ProjectErrorBoundary';
 
 /**
  * Actions
@@ -47,6 +48,7 @@ import upcomingTaskLoader from '@/routes/loaders/upcomingTaskLoader';
 import completedTaskLoader from '@/routes/loaders/completedTaskLoader';
 import projectsLoader from '@/routes/loaders/projectsLoader';
 import projectDetailLoader from './loaders/projectDetailLoader';
+import appLoader from './loaders/appLoader';
 
 /**
  * Types
@@ -103,6 +105,7 @@ const appRouteChildren: RouteObject[] = [
     path: 'projects/:projectId',
     element: <ProjectDetailPage />,
     loader: projectDetailLoader,
+    errorElement: <ProjectErrorBoundary />,
   },
 ];
 
@@ -118,6 +121,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: appRouteChildren,
     action: appAction,
+    loader: appLoader,
   },
 ]);
 

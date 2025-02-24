@@ -31,10 +31,7 @@ const CompletedTaskPage = () => {
   return (
     <>
       <Head title='Completed - Tasky AI' />
-      <TopAppBar
-        title='Completed'
-        taskCount={tasks.total}
-      />
+      <TopAppBar title='Completed' />
 
       <Page>
         <PageHeader>

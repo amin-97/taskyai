@@ -44,6 +44,11 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 /**
+ * Hooks
+ */
+import { useProjects } from '@/context/ProjectContext';
+
+/**
  *Assets
  */
 import {
@@ -53,6 +58,7 @@ import {
   ChevronDown,
   Hash,
   SendHorizonal,
+  Check,
 } from 'lucide-react';
 
 /**
@@ -60,6 +66,7 @@ import {
  */
 import type { ClassValue } from 'clsx';
 import type { TaskForm } from '@/types';
+import type { Models } from 'appwrite';
 
 type TaskFormProps = {
   defaultFormData?: TaskForm;
@@ -82,6 +89,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
   onCancel,
   onSubmit,
 }) => {
+  const projects = useProjects();
+
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.project);
@@ -93,6 +102,17 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const [projectOpen, setProjectOpen] = useState(false);
 
   const [formData, setFormData] = useState(defaultFormData);
+
+  useEffect(() => {
+    if (projectId) {
+      const { name, color_hex } = projects?.documents.find(
+        ({ $id }) => projectId === $id,
+      ) as Models.Document;
+
+      setProjectName(name);
+      setProjectColorHex(color_hex);
+    }
+  }, [projects, projectId]);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -157,6 +177,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
               <Calendar
                 mode='single'
                 disabled={{ before: new Date() }}
+                selected={dueDate ? new Date(dueDate) : undefined}
                 initialFocus
                 onSelect={(selected) => {
                   setDueDate(selected || null);
@@ -201,7 +222,10 @@ const TaskForm: React.FC<TaskFormProps> = ({
               aria-expanded={projectOpen}
               className='max-w-max'
             >
-              <Inbox /> Inbox <ChevronDown />
+              {projectName ? <Hash color={projectColorHex} /> : <Inbox />}
+              Inbox
+              <span className='truncate'>{projectName || 'Inbox'}</span>
+              <ChevronDown />
             </Button>
           </PopoverTrigger>
 
@@ -217,9 +241,28 @@ const TaskForm: React.FC<TaskFormProps> = ({
                   <CommandEmpty>No project found.</CommandEmpty>
 
                   <CommandGroup>
-                    <CommandItem>
-                      <Hash /> Project 1
-                    </CommandItem>
+                    {projects?.documents.map(({ $id, name, color_hex }) => (
+                      <CommandItem
+                        key={$id}
+                        onSelect={(selectedValue) => {
+                          setProjectName(
+                            selectedValue === projectName ? '' : name,
+                          );
+                          setProjectId(
+                            selectedValue === projectName ? null : $id,
+                          );
+                          setProjectColorHex(
+                            selectedValue === projectName
+                              ? undefined
+                              : color_hex,
+                          );
+                          setProjectOpen(false);
+                        }}
+                      >
+                        <Hash color={color_hex} /> {name}
+                        {projectName === name && <Check className='ms-auto' />}
+                      </CommandItem>
+                    ))}
                   </CommandGroup>
                 </ScrollArea>
               </CommandList>
